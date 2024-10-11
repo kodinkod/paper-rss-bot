@@ -32,13 +32,13 @@ TOPICS = ["NLP", "CV", "Generative Models"]
 
 USER_CHAT_ID = 356509850
 CHANNEL_ID = -1001569150954
-TELEGRAM_TOKEN = os.environ.get("TG",""),
+TELEGRAM_TOKEN = os.environ.get("TG","")
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 user_subscriptions: Dict[int, Set[str]] = {}
 PREPARE_PUB = None
 PREPARE_PUB_PROMPT = "Напиши цитату из культовых мультфильмов или ситкомов c подписью: "
 
-
+print(TELEGRAM_TOKEN)
 # Инициализация процессора RSS-ленты
 rss_processor = RSSFeedProcessor()
 rss_processor.register_feed("arXiv AI", RSS_SOURCES["arXiv AI"], ArxivRSSParser())
