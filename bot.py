@@ -16,7 +16,7 @@ import os
 
 model = ChatOpenAI(
     model_name="gpt-3.5-turbo-0125",
-    openai_api_key=os.environ.get("GPT"),
+    openai_api_key=os.environ.get("GPT",""),
     base_url="https://api.proxyapi.ru/openai/v1",
 )
 
@@ -32,7 +32,7 @@ TOPICS = ["NLP", "CV", "Generative Models"]
 
 USER_CHAT_ID = 356509850
 CHANNEL_ID = -1001569150954
-TELEGRAM_TOKEN = os.environ.get("TG"),
+TELEGRAM_TOKEN = os.environ.get("TG",""),
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 user_subscriptions: Dict[int, Set[str]] = {}
 PREPARE_PUB = None
