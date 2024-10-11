@@ -127,10 +127,10 @@ def meme(message):
     anecdot = escape_markdown(model.invoke(new_prompt).content).replace("\.", ".")
     a = random.choice([0,1,2,3,4,5,6,7,8,9,10])
     if a ==1:
-        bot.send_message(message.chat.id, f"😁😁😁😁 {new_prompt}: {anecdot}")
-    else:
         bot.send_message(message.chat.id, "😁😁😁😁 ГООООЛ СЛИИИТ 😁😁😁😁")
-
+    else:
+        bot.send_message(message.chat.id, f"{get_random_kind_emoji()} {new_prompt}: {anecdot}")
+        
 
 # Функция для получения случайного "доброго" эмодзи
 def get_random_kind_emoji() -> str:
