@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "kodin-ai-bot"
+version = "1"
+description = ""
+authors = ["kodidi <koddinrus@gmail.com>"]
+readme = "README.md"
+packages = [{include = "kodin_ai_bot"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+telegram = "^0.0.1"
+python-telegram-bot = "^21.6"
+telebot = "^0.0.5"
+langchain-openai = "^0.2.2"
+schedule = "^1.2.2"
+
+[tool.poetry.group.dev.dependencies]
+cmsplugin-feedparser = "^0.3.0"
+pydantic-telegram = "^0.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
