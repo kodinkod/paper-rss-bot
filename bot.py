@@ -38,6 +38,7 @@ user_subscriptions: Dict[int, Set[str]] = {}
 PREPARE_PUB = None
 PREPARE_PUB_PROMPT = "Напиши цитату из культовых мультфильмов или ситкомов c подписью: "
 
+
 print(TELEGRAM_TOKEN)
 # Инициализация процессора RSS-ленты
 rss_processor = RSSFeedProcessor()
@@ -65,7 +66,6 @@ def escape_markdown(text: str) -> str:
 # Функции для сохранения и загрузки данных
 SUBSCRIPTIONS_FILE = "user_subscriptions.json"
 TOPICS_FILE = "user_topics.json"
-
 
 @bot.message_handler(commands=["set_prompt"])
 def set_prompt(message):
@@ -121,10 +121,15 @@ def schedule_runner():
         time.sleep(1)
 
 
-@bot.message_handler(commands=["meme"])
+@bot.message_handler(commands=["gpt"])
 def meme(message):
-    anecdot = escape_markdown(model.invoke("Анекдот").content).replace("\.", ".")
-    bot.send_message(message.chat.id, f"😁😁😁😁 Анекдот: {anecdot}")
+    new_prompt = message.text[len("/gpt ") :].strip()
+    anecdot = escape_markdown(model.invoke(new_prompt).content).replace("\.", ".")
+    a = random.choice([0,1])
+    if a ==1:
+        bot.send_message(message.chat.id, f"😁😁😁😁 {new_prompt}: {anecdot}")
+    else:
+        bot.send_message(message.chat.id, "😁😁😁😁 ГООООЛ СЛИИИТ 😁😁😁😁")
 
 
 # Функция для получения случайного "доброго" эмодзи
