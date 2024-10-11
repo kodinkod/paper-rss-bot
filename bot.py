@@ -125,7 +125,7 @@ def schedule_runner():
 def meme(message):
     new_prompt = message.text[len("/gpt ") :].strip()
     anecdot = escape_markdown(model.invoke(new_prompt).content).replace("\.", ".")
-    a = random.choice([0,1])
+    a = random.choice([0,1,2,3,4,5,6,7,8,9,10])
     if a ==1:
         bot.send_message(message.chat.id, f"😁😁😁😁 {new_prompt}: {anecdot}")
     else:
