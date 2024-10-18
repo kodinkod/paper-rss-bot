@@ -118,6 +118,11 @@ def schedule_runner():
         time.sleep(1)
 
 
+@bot.message_handler(commands=["zaibal"])
+def hide(message):
+    bot.send_message(message.chat.id, "Сори(", reply_markup=types.ReplyKeyboardRemove())
+
+    
 @bot.message_handler(commands=["gpt"])
 def meme(message):
     new_prompt = message.text[len("/gpt ") :].strip()
