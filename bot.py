@@ -25,8 +25,8 @@ RSS_SOURCES = {
     "HuggingFace Daily pappers": "https://jamesg.blog/hf-papers.xml",
     "arXiv AI": "https://arxiv.org/rss/cs.AI",
     "arXiv ML": "https://arxiv.org/rss/cs.LG",
-    "arXiv Stat.ML": "https://arxiv.org/rss/stat.ML",
-    "OpenAI Blog": "https://openai.com/blog/rss/",
+    #"arXiv Stat.ML": "https://arxiv.org/rss/stat.ML",
+    #"OpenAI Blog": "https://openai.com/blog/rss/",
 }
 TOPICS = ["NLP", "CV", "Generative Models"]
 
@@ -38,15 +38,10 @@ user_subscriptions: Dict[int, Set[str]] = {}
 PREPARE_PUB = None
 PREPARE_PUB_PROMPT = "Напиши цитату из культовых мультфильмов или ситкомов c подписью: "
 
-
-print(TELEGRAM_TOKEN)
 # Инициализация процессора RSS-ленты
 rss_processor = RSSFeedProcessor()
 rss_processor.register_feed("arXiv AI", RSS_SOURCES["arXiv AI"], ArxivRSSParser())
 rss_processor.register_feed("arXiv ML", RSS_SOURCES["arXiv ML"], ArxivRSSParser())
-rss_processor.register_feed(
-    "arXiv Stat.ML", RSS_SOURCES["arXiv Stat.ML"], ArxivRSSParser()
-)
 rss_processor.register_feed(
     "HuggingFace Daily pappers",
     RSS_SOURCES["HuggingFace Daily pappers"],
