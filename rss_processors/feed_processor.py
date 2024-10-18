@@ -1,3 +1,4 @@
+import random
 import feedparser
 from dataclasses import dataclass
 from typing import List, Optional, Dict, Set
@@ -97,7 +98,7 @@ class RSSFeedProcessor:
         self.feed_urls[source_key] = feed_url
 
     def get_latest_articles(self, sources: Set[str], count: int = 1) -> List[Article]:
-        all_articles: List[Article] = []
+        all_articles: List[List[Article]] = []
         for source_key in sources:
             parser = self.feed_parsers.get(source_key)
             feed_url = self.feed_urls.get(source_key)
@@ -105,9 +106,12 @@ class RSSFeedProcessor:
                 fetcher = RSSFeedFetcher(feed_url)
                 feed = fetcher.fetch_feed()
                 articles = parser.parse_feed(feed)
-                all_articles.extend(articles[:count])
+                all_articles.append(articles[:count])
             else:
                 print(f"Источник {source_key} не найден или не имеет парсера")
-        # Сортировка статей по дате публикации (опционально)
-        all_articles.sort(key=lambda x: x.published, reverse=True)
+
+ 
+        random.shuffle(all_articles)
+        
+  
         return all_articles[:count*len(sources)]

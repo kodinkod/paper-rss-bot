@@ -247,7 +247,7 @@ def send_welcome(message):
         user_topics[user_id] = set()
     # Создаем меню
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn_latest = types.KeyboardButton("Последние статьи")
+    btn_latest = types.KeyboardButton("Pull")
     btn_subscriptions = types.KeyboardButton("Мои подписки")
     btn_sources = types.KeyboardButton("Источники")
     #btn_topics = types.KeyboardButton("Темы")
@@ -326,7 +326,6 @@ def callback_subscription(call):
         )
     except Exception as e:
         print(f"Ошибка при обновлении клавиатуры: {e}")
-
 
 @bot.message_handler(func=lambda message: message.text == "Мои подписки")
 def list_subscriptions(message):
@@ -435,20 +434,22 @@ def go_back(message):
     # Возвращаем пользователя в главное меню
     send_welcome(message)
 
-def send_article_list(chat_id, articles):
-    markup = types.InlineKeyboardMarkup()
-    for idx, article in enumerate(articles):
-        button = types.InlineKeyboardButton(
-            text=article.title[:50],  # Ограничиваем длину названия для кнопки
-            callback_data=f'show_article_{idx}'
-        )
-        markup.add(button)
-    bot.send_message(chat_id, "Выберите статью для подробного просмотра:", reply_markup=markup)
-
-    # Сохраняем список статей для данного чата
-    user_articles[chat_id] = articles
+def send_article_list(chat_id, articles_mas: List[List[Article]], user_subscriptions):
+    user_articles[chat_id] = []
+    id_article = 0
+    for theme_article, articles in zip(user_subscriptions, articles_mas):
+        markup = types.InlineKeyboardMarkup()
+        for _, article in enumerate(articles):
+            button = types.InlineKeyboardButton(
+                text=article.title[:50],  # Ограничиваем длину названия для кнопки
+                callback_data=f'show_article_{id_article}'
+            )
+            markup.add(button)
+            id_article+=1
+        user_articles[chat_id].extend(articles)
+        bot.send_message(chat_id, f"{theme_article}, Выберите статью для подробного просмотра:", reply_markup=markup)
     
-@bot.message_handler(func=lambda message: message.text == 'Последние статьи')
+@bot.message_handler(func=lambda message: message.text == 'Pull')
 def send_latest_articles(message):
     user_id = message.from_user.id
     chat_id = message.chat.id
@@ -462,7 +463,7 @@ def send_latest_articles(message):
         return
     
     # Отправляем список статей с кнопками
-    send_article_list(chat_id, articles)
+    send_article_list(chat_id, articles, user_subscriptions[user_id])
     
     
 @bot.callback_query_handler(func=lambda call: call.data.startswith('show_article_'))
@@ -475,13 +476,20 @@ def callback_show_article(call):
         return
 
     article = user_articles[chat_id][idx]
-
-    message_text = f"*{escape_markdown(article.title)}*\n" \
+    
+    prep_text = f"*{escape_markdown(article.title)}*\n" \
                    f"_Источник_: {escape_markdown(article.source)}\n" \
                    f"_Авторы_: {escape_markdown(article.authors)}\n" \
-                   f"_Опубликовано_: {escape_markdown(article.published)}\n\n" \
-                   f"{escape_markdown(article.summary)}\n\n" \
-                   f"[Ссылка на статью]({escape_markdown(article.link)})"
+                   f"_Опубликовано_: {escape_markdown(article.published)}\n\n"
+    message_text_AI = escape_markdown(
+        model.invoke(
+            f"Ты блогер-эксперт в области AI, тебе нужно простым языком по 5 пунктам сделать короткое и емкое описание о чем эта статья: {prep_text}, {article.summary}"
+        ).content
+    )      
+     
+    message_text = prep_text + message_text_AI
+    
+    message_text += f"\n\n [Ссылка на статью]({escape_markdown(article.link)})"
     if hasattr(article, 'pdf_link') and article.pdf_link:
         message_text += f" | [PDF]({escape_markdown(article.pdf_link)})"
     try:
