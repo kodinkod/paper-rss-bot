@@ -237,6 +237,17 @@ def load_data():
 # Загружаем данные при запуске
 load_data()
 
+
+def get_menu():
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    btn_latest = types.KeyboardButton("Pull")
+    btn_subscriptions = types.KeyboardButton("Мои подписки")
+    btn_sources = types.KeyboardButton("Источники")
+    markup.add(btn_latest)
+    markup.add(btn_subscriptions, btn_sources)
+    return markup
+    
+
 # Обработчики команд бота
 @bot.message_handler(commands=["start"])
 def send_welcome(message):
@@ -245,19 +256,11 @@ def send_welcome(message):
         user_subscriptions[user_id] = set()
     if user_id not in user_topics:
         user_topics[user_id] = set()
-    # Создаем меню
-    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    btn_latest = types.KeyboardButton("Pull")
-    btn_subscriptions = types.KeyboardButton("Мои подписки")
-    btn_sources = types.KeyboardButton("Источники")
-    #btn_topics = types.KeyboardButton("Темы")
-    markup.add(btn_latest)
-    markup.add(btn_subscriptions, btn_sources)
-    #markup.add(btn_topics)
+
     bot.send_message(
         message.chat.id,
         "Здравствуйте! Вы можете использовать меню ниже для взаимодействия со мной.",
-        reply_markup=markup,
+        reply_markup=get_menu(),
     )
 
 
@@ -513,6 +516,7 @@ def handle_user_response(message):
 
 
 if __name__ == "__main__":
+    
     thread = Thread(target=schedule_runner)
     thread.start()
     bot.polling(none_stop=True)
