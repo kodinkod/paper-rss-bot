@@ -4,7 +4,7 @@ version = "1"
 description = ""
 authors = ["kodidi <koddinrus@gmail.com>"]
 readme = "README.md"
-packages = [{include = "kodin_ai_bot"}]
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"
