@@ -32,7 +32,7 @@ class ArxivRSSParser(BaseRSSParser):
                 authors_list = entry.get('authors', [])
                 authors: str = ', '.join([author.name for author in authors_list]) if authors_list else 'Неизвестно'
                 pdf_link: Optional[str] = next(
-                    (l.href for l in entry.get('links', []) if l.type == 'application/pdf'), None
+                    (li.href for li in entry.get('links', []) if li.type == 'application/pdf'), None
                 )
 
                 article = Article(
