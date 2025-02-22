@@ -120,19 +120,7 @@ def schedule_runner():
 
 @bot.message_handler(commands=["zaibal"])
 def hide(message):
-    bot.send_message(message.chat.id, "Сори(", reply_markup=types.ReplyKeyboardRemove())
-
-    
-@bot.message_handler(commands=["gpt"])
-def meme(message):
-    new_prompt = message.text[len("/gpt ") :].strip()
-    anecdot = escape_markdown(model.invoke(new_prompt).content).replace("\.", ".")
-    a = random.choice([0,1,2,3,4,5,6,7,8,9,10])
-    if a ==1:
-        bot.send_message(message.chat.id, "😁😁😁😁 ГООООЛ СЛИИИТ 😁😁😁😁")
-    else:
-        bot.send_message(message.chat.id, f"{get_random_kind_emoji()} {new_prompt}: {anecdot}")
-        
+    bot.send_message(message.chat.id, "Сори(", reply_markup=types.ReplyKeyboardRemove())  
 
 # Функция для получения случайного "доброго" эмодзи
 def get_random_kind_emoji() -> str:
@@ -344,99 +332,6 @@ def list_subscriptions(message):
     else:
         bot.reply_to(message, "Вы не подписаны ни на один источник.")
 
-
-#@bot.message_handler(func=lambda message: message.text == "Темы")
-#def list_topics_menu(message):
-#    user_id = message.from_user.id
-#    if user_id not in user_topics:
-#        user_topics[user_id] = set()
-#
-#    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-#    btn_manage_topics = types.KeyboardButton("Управление темами")
-#    btn_my_topics = types.KeyboardButton("Мои темы")
-#    btn_back = types.KeyboardButton("Назад")
-#    markup.add(btn_manage_topics)
-#    markup.add(btn_my_topics)
-#    markup.add(btn_back)
-#    bot.send_message(message.chat.id, "Выберите действие:", reply_markup=markup)
-
-
-#@bot.message_handler(func=lambda message: message.text == "Управление темами")
-#def manage_topics(message):
-#    user_id = message.from_user.id
-#    if user_id not in user_topics:
-#        user_topics[user_id] = set()
-#
-#    markup = types.InlineKeyboardMarkup()
-#    for topic in TOPICS:
-#        if topic in user_topics[user_id]:
-#            button = types.InlineKeyboardButton(
-#                text=f"Отписаться от '{topic}'", callback_data=f"unsub_topic_{topic}"
-#            )
-#        else:
-#            button = types.InlineKeyboardButton(
-#                text=f"Подписаться на '{topic}'", callback_data=f"sub_topic_{topic}"
-#            )
-#        markup.add(button)
-#    bot.send_message(
-#        message.chat.id, "Выберите темы для подписки или отписки:", reply_markup=markup
-#    )
-
-
-#@bot.callback_query_handler(
-#    func=lambda call: call.data.startswith(("sub_topic_", "unsub_topic_"))
-#)
-#def callback_topic_subscription(call):
-#    user_id = call.from_user.id
-#    if user_id not in user_topics:
-#        user_topics[user_id] = set()
-#
-#    action, topic = call.data.split("_topic_", 1)
-#
-#    if topic not in TOPICS:
-#        bot.answer_callback_query(call.id, "Тема не найдена.")
-#        return
-#
-#    if action == "sub":
-#        user_topics[user_id].add(topic)
-#        bot.answer_callback_query(call.id, f"Вы подписались на тему '{topic}'.")
-#    elif action == "unsub":
-#        user_topics[user_id].discard(topic)
-#        bot.answer_callback_query(call.id, f"Вы отписались от темы '{topic}'.")
-#
-#    save_data()
-#
-#    # Обновляем кнопки
-#    markup = types.InlineKeyboardMarkup()
-#    for t in TOPICS:
-#        if t in user_topics[user_id]:
-#            button = types.InlineKeyboardButton(
-#                text=f"Отписаться от '{t}'", callback_data=f"unsub_topic_{t}"
-#            )
-#        else:
-#            button = types.InlineKeyboardButton(
-#                text=f"Подписаться на '{t}'", callback_data=f"sub_topic_{t}"
-#            )
-#        markup.add(button)
-#    try:
-#        bot.edit_message_reply_markup(
-#            chat_id=call.message.chat.id,
-#            message_id=call.message.message_id,
-#            reply_markup=markup,
-#        )
-#    except Exception as e:
-#        print(f"Ошибка при обновлении клавиатуры: {e}")
-
-#@bot.message_handler(func=lambda message: message.text == "Мои темы")
-#def show_my_topics(message):
-#    user_id = message.from_user.id
-#    if user_id in user_topics and user_topics[user_id]:
-#        topics = "\n".join([f"- {topic}" for topic in user_topics[user_id]])
-#        bot.reply_to(message, f"Вы подписаны на следующие темы:\n{topics}")
-#    else:
-#        bot.reply_to(message, "Вы не подписаны ни на одну тему.")
-
-
 @bot.message_handler(func=lambda message: message.text == "Назад")
 def go_back(message):
     # Возвращаем пользователя в главное меню
@@ -491,7 +386,7 @@ def callback_show_article(call):
                    f"_Опубликовано_: {escape_markdown(article.published)}\n\n"
     message_text_AI = escape_markdown(
         model.invoke(
-            f"Ты блогер-эксперт в области AI, тебе нужно простым языком по 5 пунктам сделать короткое и емкое описание о чем эта статья: {prep_text}, {article.summary}"
+            f"Ты блогер-эксперт в области AI, тебе нужно простым языком по 3 пунктам сделать короткое и емкое описание о чем эта статья. Используй стикерв и неформальное общение: {prep_text}, {article.summary}"
         ).content
     )      
      
